@@ -29,7 +29,7 @@ app.get('router').gather('route').each((path, handler) => {
   console.log('fake starting server 1')
 })
 
-// # Case 2b: Process all gather responses
+// # Case 2b: Process all gather responses in one go
 
 app.get('router').gather('route').all((arrayOfRoutes) => {
   console.log('registering all routes', arrayOfRoutes)
