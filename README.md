@@ -6,6 +6,26 @@
 > npm start
 ```
 
+## Event Namespacing
+
+Rather than have all events on the global namespace (app object), now you can set module level events using the `get` method on Application.
+
+```
+app.get('router').emit() // Do something on router
+```
+
+**Note**: This is not a ref to the specific singleton, just a special dispatcher class that application manages.  For example, to dispatch a router event, the Router module would do something like:
+
+```
+class Router {
+  constructor(app) {
+    app.get('router').emit('routing!')
+  }
+}
+```
+
+Module classes also implement the `gather` pattern below.
+
 ## Patterns
 
 ### Events
