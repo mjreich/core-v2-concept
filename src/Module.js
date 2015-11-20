@@ -1,8 +1,8 @@
 /* 
 * @Author: mike
 * @Date:   2015-11-17 13:22:40
-* @Last Modified 2015-11-18
-* @Last Modified time: 2015-11-18 14:07:10
+* @Last Modified 2015-11-20
+* @Last Modified time: 2015-11-20 15:29:37
 */
 
 'use strict';
@@ -28,18 +28,32 @@ export default class Module extends Dispatcher {
     var each = (cb) => {
       return new Promise((resolve, reject) => {
         if(this._appLoaded){
-          this._awaits[name].forEach(cb)
+          this._awaits[name].forEach((args) => cb(...args))
           resolve()
         } else {
           this._app.on('loaded.after').then(() => {
-            this._awaits[name].forEach(cb)
+            this._awaits[name].forEach((args) => cb(...args))
             resolve()
           }) 
         }
       })
     }
+    var all = (cb) => {
+      return new Promise((resolve, reject) => {
+        if(this._appLoaded){
+          cb(this._awaits[name])
+          resolve()
+        } else {
+          this._app.on('loaded.after').then(() => {
+            cb(this._awaits[name])
+            resolve()
+          }) 
+        }
+      }) 
+    }
     return {
-      each: each
+      each: each,
+      all: all
     }
   }
 
