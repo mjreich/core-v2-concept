@@ -2,7 +2,7 @@
 * @Author: mike
 * @Date:   2015-11-17 13:22:40
 * @Last Modified 2015-11-20
-* @Last Modified time: 2015-11-20 15:29:37
+* @Last Modified time: 2015-11-20 17:15:56
 */
 
 'use strict';
@@ -52,8 +52,8 @@ export default class Module extends Dispatcher {
       }) 
     }
     return {
-      each: each,
-      all: all
+      each, 
+      all
     }
   }
 
