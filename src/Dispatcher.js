@@ -1,8 +1,8 @@
 /* 
 * @Author: mike
 * @Date:   2015-11-17 13:22:24
-* @Last Modified 2015-11-20
-* @Last Modified time: 2015-11-20 17:29:31
+* @Last Modified 2015-11-22
+* @Last Modified time: 2015-11-22 12:20:54
 */
 
 'use strict';
@@ -23,9 +23,16 @@ export default class Dispatcher extends EventEmitter {
 
   emit(event) {
     var cb = (...args) => {
-      args.unshift(event);
-      super.emit.apply(this, args);
+
+      let _handlers = []
+
+      _handlers = _handlers.concat(super.listeners(event+".before")).concat(super.listeners(event)).concat(super.listeners(event+".after"));
+      return Promise.all(_handlers.map((handler) => {
+        let ret = handler(...args)
+        return Promise.resolve(ret)
+      }))
     }
+
     return {
       with: cb
     }
@@ -34,34 +41,21 @@ export default class Dispatcher extends EventEmitter {
   // emit(event) {
   //   var cb = (...args) => {
   //     args.unshift(event);
-  //     try {
-  //       if (arguments[0] == "newListener") return super.emit.apply(this, arguments)
+      
+  //     if (args[0] == "newListener") return super.emit.apply(this, args)
+  //     var beforeArgs = Array.prototype.slice.call(args)
+  //     beforeArgs[0] = beforeArgs[0]+".before"
+  //     var afterArgs = Array.prototype.slice.call(args)
+  //     afterArgs[0] = afterArgs[0]+".after"
+      
+  //     super.once.apply(this, [beforeArgs[0], () => super.emit.apply(this, args)])
 
-  //       var args = Array.prototype.slice.call(arguments)
-  //       var beforeArgs = Array.prototype.slice.call(arguments)
-  //       beforeArgs[0] = beforeArgs[0]+".before"
-  //       var afterArgs = Array.prototype.slice.call(arguments)
-  //       afterArgs[0] = afterArgs[0]+".after"
-
-  //       super.once.apply(this, [beforeArgs[0], ((a) => {
-  //         return () => {super.emit.apply(this, a)}
-  //       })(args)])
-
-  //       super.once.apply(this, [arguments[0], ((a) => {
-  //         return () => {
-  //           this._registered.forEach((cb) => {
-  //             cb(arguments);
-  //           });
-  //           super.emit.apply(this, a)
-  //         }
-  //       })(afterArgs)])
-        
-  //       super.emit.apply(this, beforeArgs)
-  //     } catch (e) {
-  //       var logger = console
-  //       if (this.log && this.log.error) logger = this.log
-  //       logger.error("Exception processing event: " + arguments[0], e.stack, e)
-  //     }
+  //     super.once.apply(this, [args[0], () => super.emit.apply(this, afterArgs)])
+      
+  //     super.emit.apply(this, beforeArgs)
+  //   }
+  //   return {
+  //     with: cb
   //   }
   // }
 

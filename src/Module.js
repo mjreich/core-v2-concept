@@ -1,8 +1,8 @@
 /* 
 * @Author: mike
 * @Date:   2015-11-17 13:22:40
-* @Last Modified 2015-11-20
-* @Last Modified time: 2015-11-20 17:15:56
+* @Last Modified 2015-11-22
+* @Last Modified time: 2015-11-22 12:39:04
 */
 
 'use strict';
@@ -16,45 +16,13 @@ export default class Module extends Dispatcher {
     this._name = name
     this._app = app
     this._awaits = {}
-    this._appLoaded = false
-    app.on('loaded.after').then(this._setLoaded)
-  }
-
-  _setLoaded() {
-    this._appLoaded = true
+    this._appLoaded = app.on('loaded.after')
   }
 
   gather(name) {
-    var each = (cb) => {
-      return new Promise((resolve, reject) => {
-        if(this._appLoaded){
-          this._awaits[name].forEach((args) => cb(...args))
-          resolve()
-        } else {
-          this._app.on('loaded.after').then(() => {
-            this._awaits[name].forEach((args) => cb(...args))
-            resolve()
-          }) 
-        }
-      })
-    }
-    var all = (cb) => {
-      return new Promise((resolve, reject) => {
-        if(this._appLoaded){
-          cb(this._awaits[name])
-          resolve()
-        } else {
-          this._app.on('loaded.after').then(() => {
-            cb(this._awaits[name])
-            resolve()
-          }) 
-        }
-      }) 
-    }
-    return {
-      each, 
-      all
-    }
+    return this._appLoaded.then(() => {
+      return this._awaits[name]
+    })
   }
 
   send(name) { 
