@@ -40,5 +40,9 @@ app.get('router').gather('route').all().then((arrayOfRoutes) => {
 
 // Emulating a boot stage, which is coded into the Module#gather method.
 
+app.await('loaded.after', new Promise((resolve, reject) => {
+  setTimeout(resolve, 10000);
+  console.log('waiting');
+}));
 
-app.emit('loaded').with()
+app.emit('loaded').with().then(() => {console.log('everything is done')});

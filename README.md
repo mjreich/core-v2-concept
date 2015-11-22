@@ -32,7 +32,9 @@ Module classes also implement the `gather` pattern below.
 
 1. `on(event).then(cb)`: On an event, do something.
 
-2. `emit(event).with(args)`: Emit an event, with a set of args
+2. `emit(event).with(args).then(...)`: Emit an event, with a set of args
+
+3. `await(event, new Promise(...))`: Ensure emit doesn't resolve until promise completes
 
 ### Gather values
 
