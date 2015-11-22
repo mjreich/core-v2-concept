@@ -38,9 +38,9 @@ Module classes also implement the `gather` pattern below.
 
 1. `send(name).with(args)`: Send a specific value, with option args.
 
-2a. `gather(name).each(cb).then(cb)`: Get all gathered values, iterate over each, then perform a final callback 
+2a. `gather(name).each(iterator).then(cb)`: Get all gathered values, iterate over each, then perform a final callback 
 
-2b. `gather(name).all(cb).then(cb)`: Get all gathered values, get all values as an array, then perform a final callback 
+2b. `gather(name).all().then(cb)`: Get all gathered values, get all values as an array, then perform a final callback 
 
 ## Files
 
